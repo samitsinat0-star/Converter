@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Trip Planner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #000000;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #8B5CF6;
+        }
+
+        /* Main Header */
+        .main-header {
+            background: rgba(30, 30, 30, 0.95);
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #8B5CF6;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-flags {
+            display: flex;
+            gap: 5px;
+        }
+
+        .header-flag {
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .header-flag:hover {
+            transform: scale(1.2);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .header-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .header-login {
+            background: transparent;
+            color: #8B5CF6;
+            border: 1px solid #8B5CF6;
+        }
+
+        .header-login:hover {
+            background: #8B5CF6;
+            color: #000;
+        }
+
+        .header-signup {
+            background: #8B5CF6;
+            color: #000;
+        }
+
+        .header-signup:hover {
+            background: #7C3AED;
+        }
+
+        /* Main Content Container */
+        .main-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 30px;
+            width: 100%;
+            display: flex;
+            gap: 30px;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 250px;
+            background: rgba(30, 30, 30, 0.95);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+            padding: 30px 20px;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 40px;
+            width: 100%;
+        }
+
+        /* Custom stylized logo based on your drawing */
+        .custom-logo {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 4rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #8B5CF6, #A78BFA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            transform: rotate(-5deg);
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: transform 0.3s, text-shadow 0.3s;
+        }
+
+        .custom-logo:hover {
+            transform: rotate(0deg) scale(1.1);
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo-subtitle {
+            font-size: 0.9rem;
+            color: #A78BFA;
+            font-weight: 500;
+        }
+
+        .nav-menu {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #8B5CF6;
+            transition: all 0.3s;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: rgba(139, 92, 246, 0.1);
+            color: #A78BFA;
+            transform: translateX(5px);
+        }
+
+        .nav-item.active {
+            background: rgba(139, 92, 246, 0.2);
+            color: #A78BFA;
+        }
+
+        .nav-icon {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .auth-section {
+            margin-top: auto;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sidebar-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            width: 100%;
+            font-size: 0.9rem;
+        }
+
+        .sidebar-login {
+            background: transparent;
+            color: #8B5CF6;
+            border: 2px solid #8B5CF6;
+        }
+
+        .sidebar-login:hover {
+            background: #8B5CF6;
+            color: #000;
+        }
+
+        .sidebar-signup {
+            background: #8B5CF6;
+            color: #000;
+        }
+
+        .sidebar-signup:hover {
+            background: #7C3AED;
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* Section Styles */
+        .section {
+            background: rgba(30, 30, 30, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section h2 {
+            color: #8B5CF6;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .section p {
+            color: #A78BFA;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        /* Input Section */
+        .input-section {
+            background: rgba(30, 30, 30, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #8B5CF6;
+            font-size: 1.1rem;
+        }
+
+        .currency-input {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .currency-symbol {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #8B5CF6;
+            min-width: 40px;
+        }
+
+        input[type="number"] {
+            flex: 1;
+            padding: 15px;
+            font-size: 1.2rem;
+            border: 2px solid #444;
+            border-radius: 8px;
+            background: #222;
+            color: #8B5CF6;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #8B5CF6;
+        }
+
+        /* Dashboard - Cards with purple background */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .currency-card {
+            background: #2a1a4a;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .currency-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .currency-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+        }
+
+        .currency-card.ils::before {
+            background: linear-gradient(90deg, #0077FF, #00A3FF);
+        }
+
+        .currency-card.eur::before {
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+        }
+
+        .currency-card.usd::before {
+            background: linear-gradient(90deg, #228B22, #32CD32);
+        }
+
+        .currency-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .currency-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #8B5CF6;
+        }
+
+        .currency-flag {
+            font-size: 1.8rem;
+        }
+
+        .exchange-rate {
+            color: #A78BFA;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .converted-amount {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #8B5CF6;
+            margin-bottom: 10px;
+        }
+
+        .trend {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+            color: #A78BFA;
+        }
+
+        .trend.up {
+            color: #4CAF50;
+        }
+
+        .trend.down {
+            color: #F44336;
+        }
+
+        /* Loading */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #8B5CF6;
+            font-size: 1.1rem;
+        }
+
+        .spinner {
+            border: 3px solid rgba(139, 92, 246, 0.3);
+            border-top: 3px solid #8B5CF6;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(30, 30, 30, 0.95);
+            padding: 30px 0;
+            margin-top: 50px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+            width: 100%;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .copyright {
+            color: #A78BFA;
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            color: #8B5CF6;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .footer-links a:hover {
+            color: #A78BFA;
+            text-decoration: underline;
+        }
+
+        /* Policy Modal */
+        .policy-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .policy-modal.active {
+            display: flex;
+        }
+
+        .policy-content {
+            background: rgba(30, 30, 30, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .policy-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #444;
+        }
+
+        .policy-title {
+            font-size: 1.5rem;
+            color: #8B5CF6;
+        }
+
+        .close-policy {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #A78BFA;
+        }
+
+        .policy-body {
+            color: #A78BFA;
+            line-height: 1.6;
+        }
+
+        .policy-body h3 {
+            color: #8B5CF6;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .policy-body p {
+            margin-bottom: 15px;
+        }
+
+        /* Login Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: rgba(30, 30, 30, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: #8B5CF6;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #A78BFA;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #8B5CF6;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #444;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: #222;
+            color: #8B5CF6;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #8B5CF6;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            background: #8B5CF6;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: #7C3AED;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #A78BFA;
+        }
+
+        .form-footer a {
+            color: #8B5CF6;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                margin-bottom: 30px;
+            }
+
+            .main-header {
+                padding: 10px 15px;
+            }
+
+            .header-title {
+                font-size: 1.2rem;
+            }
+
+            .auth-buttons {
+                display: none;
+            }
+
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="header-title">
+            <span>💱 Currency Trip Planner</span>
+            <div class="header-flags" id="user-location">
+                <span class="header-flag" title="Detecting location...">🌍</span>
+            </div>
+        </div>
+        <div class="auth-buttons">
+            <button class="header-btn header-login" id="header-login">Login</button>
+            <button class="header-btn header-signup" id="header-signup">Sign Up</button>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <div class="main-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <!-- Custom stylized logo based on your drawing -->
+                <div class="custom-logo" id="logo-link">C</div>
+                <div class="logo-subtitle">Currency Trip Planner</div>
+            </div>
+            
+            <nav class="nav-menu">
+                <div class="nav-item active" data-section="converter">
+                    <span class="nav-icon">💱</span>
+                    <span class="nav-text">Converter</span>
+                </div>
+                <div class="nav-item" data-section="about">
+                    <span class="nav-icon">ℹ️</span>
+                    <span class="nav-text">About</span>
+                </div>
+                <div class="nav-item" data-section="features">
+                    <span class="nav-icon">✨</span>
+                    <span class="nav-text">Features</span>
+                </div>
+                <div class="nav-item" data-section="contact">
+                    <span class="nav-icon">📞</span>
+                    <span class="nav-text">Contact</span>
+                </div>
+            </nav>
+            
+            <div class="auth-section">
+                <button class="sidebar-btn sidebar-login" id="sidebar-login">Login</button>
+                <button class="sidebar-btn sidebar-signup" id="sidebar-signup">Sign Up</button>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Converter Section -->
+            <section id="converter" class="section active">
+                <div class="header">
+                    <h1>Currency Trip Planner</h1>
+                    <p>Convert your Ethiopian Birr budget to international currencies</p>
+                </div>
+
+                <div class="input-section">
+                    <div class="input-group">
+                        <label for="birr-input">Enter your budget in Ethiopian Birr (ETB)</label>
+                        <div class="currency-input">
+                            <span class="currency-symbol">ETB</span>
+                            <input type="number" id="birr-input" placeholder="Enter amount" min="0" step="0.01">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Fetching exchange rates...</p>
+                </div>
+
+                <div class="dashboard" id="dashboard">
+                    <div class="currency-card ils">
+                        <div class="currency-header">
+                            <span class="currency-name">Israeli Shekel</span>
+                            <span class="currency-flag">🇮🇱</span>
+                        </div>
+                        <div class="exchange-rate" id="ils-rate">1 ETB = 0.11 ILS</div>
+                        <div class="converted-amount" id="ils-amount">0.00 ILS</div>
+                        <div class="trend" id="ils-trend">
+                            <span>↗</span>
+                            <span>+0.5% today</span>
+                        </div>
+                    </div>
+
+                    <div class="currency-card eur">
+                        <div class="currency-header">
+                            <span class="currency-name">Euro</span>
+                            <span class="currency-flag">🇪🇺</span>
+                        </div>
+                        <div class="exchange-rate" id="eur-rate">1 ETB = 0.016 EUR</div>
+                        <div class="converted-amount" id="eur-amount">0.00 EUR</div>
+                        <div class="trend" id="eur-trend">
+                            <span>↗</span>
+                            <span>+0.3% today</span>
+                        </div>
+                    </div>
+
+                    <div class="currency-card usd">
+                        <div class="currency-header">
+                            <span class="currency-name">US Dollar</span>
+                            <span class="currency-flag">🇺🇸</span>
+                        </div>
+                        <div class="exchange-rate" id="usd-rate">1 ETB = 0.018 USD</div>
+                        <div class="converted-amount" id="usd-amount">0.00 USD</div>
+                        <div class="trend" id="usd-trend">
+                            <span>↗</span>
+                            <span>+0.2% today</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- About Section -->
+            <section id="about" class="section">
+                <div class="header">
+                    <h1>About Currency Trip Planner</h1>
+                    <p>Your trusted currency conversion tool for travelers</p>
+                </div>
+                <div class="section-content">
+                    <h2>About Us</h2>
+                    <p>Currency Trip Planner is a comprehensive currency conversion tool designed to help travelers and international business professionals convert their budgets efficiently. Our platform provides real-time exchange rates and instant conversions between multiple currencies.</p>
+                    <p>Founded with the mission to make currency conversion simple and accessible, we serve users from around the world with accurate and up-to-date exchange rate information.</p>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section id="features" class="section">
+                <div class="header">
+                    <h1>Features</h1>
+                    <p>Powerful tools for your currency needs</p>
+                </div>
+                <div class="section-content">
+                    <h2>Key Features</h2>
+                    <p>• Real-time currency conversion</p>
+                    <p>• Support for multiple currencies</p>
+                    <p>• User-friendly dashboard interface</p>
+                    <p>• Accurate exchange rate calculations</p>
+                    <p>• Mobile-responsive design</p>
+                    <p>• Secure user authentication</p>
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section id="contact" class="section">
+                <div class="header">
+                    <h1>Contact Us</h1>
+                    <p>Get in touch with our team</p>
+                </div>
+                <div class="section-content">
+                    <h2>Contact Information</h2>
+                    <p>Email: support@currencytripplanner.com</p>
+                    <p>Phone: +1 (555) 123-4567</p>
+                    <p>Address: 123 Finance Street, Global City, World</p>
+                    <p>Follow us on social media for updates and tips!</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="copyright">
+                &copy; 2026 Currency Trip Planner. Made by Student Tsinat Sami. All rights reserved.
+            </div>
+            
+            <div class="footer-links">
+                <a href="#" id="footer-privacy">Privacy Policy</a>
+                <a href="#" id="footer-terms">Terms of Service</a>
+                <a href="#">About Us</a>
+                <a href="#">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Login to Your Account</h2>
+                <button class="close-modal" id="close-modal">&times;</button>
+            </div>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" required placeholder="Enter your email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required placeholder="Enter your password">
+                </div>
+                
+                <button type="submit" class="btn-primary">Login</button>
+            </form>
+            
+            <div class="form-footer">
+                <p>Don't have an account? <a href="#" id="modal-signup">Sign up here</a></p>
+                <p><a href="#" id="privacy-policy">Privacy Policy</a> | <a href="#" id="terms-service">Terms of Service</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Policy Modal -->
+    <div class="policy-modal" id="policy-modal">
+        <div class="policy-content">
+            <div class="policy-header">
+                <h2 class="policy-title" id="policy-title">Policy Title</h2>
+                <button class="close-policy" id="close-policy">&times;</button>
+            </div>
+            <div class="policy-body" id="policy-body">
+                <!-- Policy content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Exchange rates (static data for this example)
+        const exchangeRates = {
+            ils: 0.1102,  // Ethiopian Birr to Israeli Shekel
+            eur: 0.0163,  // Ethiopian Birr to Euro
+            usd: 0.0181   // Ethiopian Birr to US Dollar
+        };
+
+        // Trend data
+        const trends = {
+            ils: { direction: 'up', change: '+0.5%' },
+            eur: { direction: 'up', change: '+0.3%' },
+            usd: { direction: 'up', change: '+0.2%' }
+        };
+
+        const birrInput = document.getElementById('birr-input');
+        const loading = document.getElementById('loading');
+        const dashboard = document.getElementById('dashboard');
+        const loginModal = document.getElementById('login-modal');
+        const closeModal = document.getElementById('close-modal');
+        const loginForm = document.getElementById('login-form');
+        const logoLink = document.getElementById('logo-link');
+        const navItems = document.querySelectorAll('.nav-item');
+        const sections = document.querySelectorAll('.section');
+        const userLocation = document.getElementById('user-location');
+        const policyModal = document.getElementById('policy-modal');
+        const closePolicy = document.getElementById('close-policy');
+        const policyTitle = document.getElementById('policy-title');
+        const policyBody = document.getElementById('policy-body');
+
+        // Policy content
+        const policyContent = {
+            privacy: {
+                title: 'Privacy Policy',
+                content: `
+                    <h3>1. Information Collection</h3>
+                    <p>We collect personal information when you create an account, including your name, email address, and password. We may also collect usage data to improve our services.</p>
+                    
+                    <h3>2. Data Usage</h3>
+                    <p>Your information is used to provide and improve our currency conversion services. We do not sell your personal information to third parties.</p>
+                    
+                    <h3>3. Security</h3>
+                    <p>We implement security measures to protect your data from unauthorized access, alteration, disclosure, or destruction.</p>
+                    
+                    <h3>4. Cookies</h3>
+                    <p>We use cookies to enhance your experience on our website and to analyze website traffic.</p>
+                    
+                    <h3>5. Third-Party Services</h3>
+                    <p>We may use third-party services for analytics and other functionalities. These services have their own privacy policies.</p>
+                `
+            },
+            terms: {
+                title: 'Terms of Service',
+                content: `
+                    <h3>1. Service Description</h3>
+                    <p>Currency Trip Planner provides currency conversion services. The service is provided "as is" without warranties of any kind.</p>
+                    
+                    <h3>2. User Responsibilities</h3>
+                    <p>Users are responsible for the accuracy of the information they input and for their use of the service.</p>
+                    
+                    <h3>3. Intellectual Property</h3>
+                    <p>All content on this website is the property of Currency Trip Planner and protected by copyright laws.</p>
+                    
+                    <h3>4. Limitation of Liability</h3>
+                    <p>We are not liable for any damages arising from the use of our service, including indirect or consequential damages.</p>
+                    
+                    <h3>5. Changes to Terms</h3>
+                    <p>We reserve the right to modify these terms at any time. Continued use of the service constitutes acceptance of the modified terms.</p>
+                `
+            }
+        };
+
+        // Get user location
+        function getUserLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const flags = ['🇺🇸', '🇬🇧', '🇨🇦', '🇦🇺', '🇩🇪', '🇫🇷', '🇮🇹', '🇯🇵', '🇨🇳', '🇮🇳'];
+                        const randomFlag = flags[Math.floor(Math.random() * flags.length)];
+                        userLocation.innerHTML = `<span class="header-flag" title="Your location">${randomFlag}</span>`;
+                    },
+                    (error) => {
+                        userLocation.innerHTML = `<span class="header-flag" title="Location not available">🌍</span>`;
+                    }
+                );
+            } else {
+                userLocation.innerHTML = `<span class="header-flag" title="Location not supported">🌍</span>`;
+            }
+        }
+
+        // Initialize the converter
+        function initConverter() {
+            updateConversion(0);
+            birrInput.addEventListener('input', handleInput);
+        }
+
+        // Handle user input
+        function handleInput(e) {
+            const amount = parseFloat(e.target.value) || 0;
+            updateConversion(amount);
+        }
+
+        // Update conversion values
+        function updateConversion(amount) {
+            loading.style.display = 'block';
+            dashboard.style.opacity = '0.5';
+            
+            setTimeout(() => {
+                updateCurrencyCard('ils', amount, exchangeRates.ils);
+                updateCurrencyCard('eur', amount, exchangeRates.eur);
+                updateCurrencyCard('usd', amount, exchangeRates.usd);
+                
+                loading.style.display = 'none';
+                dashboard.style.opacity = '1';
+            }, 500);
+        }
+
+        // Update individual currency card
+        function updateCurrencyCard(currency, amount, rate) {
+            const convertedAmount = (amount * rate).toFixed(2);
+            const rateElement = document.getElementById(`${currency}-rate`);
+            const amountElement = document.getElementById(`${currency}-amount`);
+            const trendElement = document.getElementById(`${currency}-trend`);
+            
+            rateElement.textContent = `1 ETB = ${rate.toFixed(4)} ${currency.toUpperCase()}`;
+            amountElement.textContent = `${convertedAmount} ${currency.toUpperCase()}`;
+            
+            const trend = trends[currency];
+            trendElement.className = `trend ${trend.direction}`;
+            trendElement.innerHTML = `<span>${trend.direction === 'up' ? '↗' : '↘'}</span><span>${trend.change} today</span>`;
+        }
+
+        // Navigation functionality
+        function setupNavigation() {
+            logoLink.addEventListener('click', () => showSection('converter'));
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const sectionId = item.dataset.section;
+                    showSection(sectionId);
+                });
+            });
+
+            // Signup buttons
+            document.getElementById('header-signup').addEventListener('click', () => {
+                alert('Sign up functionality would be implemented here');
+            });
+
+            document.getElementById('sidebar-signup').addEventListener('click', () => {
+                alert('Sign up functionality would be implemented here');
+            });
+
+            document.getElementById('modal-signup').addEventListener('click', (e) => {
+                e.preventDefault();
+                alert('Sign up functionality would be implemented here');
+                loginModal.classList.remove('active');
+            });
+
+            // Policy links
+            document.getElementById('footer-privacy').addEventListener('click', (e) => {
+                e.preventDefault();
+                showPolicy('privacy');
+            });
+
+            document.getElementById('footer-terms').addEventListener('click', (e) => {
+                e.preventDefault();
+                showPolicy('terms');
+            });
+
+            document.getElementById('privacy-policy').addEventListener('click', (e) => {
+                e.preventDefault();
+                showPolicy('privacy');
+            });
+
+            document.getElementById('terms-service').addEventListener('click', (e) => {
+                e.preventDefault();
+                showPolicy('terms');
+            });
+        }
+
+        // Show policy modal
+        function showPolicy(type) {
+            const policy = policyContent[type];
+            policyTitle.textContent = policy.title;
+            policyBody.innerHTML = policy.content;
+            policyModal.classList.add('active');
+        }
+
+        // Show specific section
+        function showSection(sectionId) {
+            sections.forEach(section => section.classList.remove('active'));
+            const selectedSection = document.getElementById(sectionId);
+            if (selectedSection) selectedSection.classList.add('active');
+            
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.section === sectionId) item.classList.add('active');
+            });
+        }
+
+        // Login modal functionality
+        document.getElementById('header-login').addEventListener('click', () => loginModal.classList.add('active'));
+        document.getElementById('sidebar-login').addEventListener('click', () => loginModal.classList.add('active'));
+        
+        closeModal.addEventListener('click', () => loginModal.classList.remove('active'));
+        loginModal.addEventListener('click', (e) => { if (e.target === loginModal) loginModal.classList.remove('active'); });
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Login functionality would be implemented here');
+            loginModal.classList.remove('active');
+            loginForm.reset();
+        });
+
+        // Policy modal functionality
+        closePolicy.addEventListener('click', () => policyModal.classList.remove('active'));
+        policyModal.addEventListener('click', (e) => { if (e.target === policyModal) policyModal.classList.remove('active'); });
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            initConverter();
+            setupNavigation();
+            getUserLocation();
+        });
+    </script>
+</body>
+</html>
